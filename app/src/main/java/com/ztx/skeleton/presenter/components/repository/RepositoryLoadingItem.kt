@@ -1,4 +1,4 @@
-package com.ztx.skeleton.presenter.components.user
+package com.ztx.skeleton.presenter.components.repository
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -24,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-fun UserLoadingItem(
+fun RepositoryLoadingItem(
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -34,32 +32,45 @@ fun UserLoadingItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(all = 8.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
                     .shimmer()
                     .background(Color.LightGray)
-                    .testTag("shimmerAvatarUserLoadingItem")
+                    .testTag("avatarShimmerBox")
             )
-            Box(
-                modifier = Modifier
-                    .padding(top = 14.dp, bottom = 15.dp, start = 16.dp)
-                    .width(150.dp)
-                    .height(20.dp)
-                    .shimmer()
-                    .background(Color.LightGray)
-                    .testTag("shimmerLoginUserLoadingItem")
-            )
+            Column(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(16.dp)
+                        .padding(start = 8.dp, end = 8.dp)
+                        .shimmer()
+                        .background(Color.LightGray)
+                        .testTag("titleShimmerBox")
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(36.dp)
+                        .padding(top = 4.dp, start = 8.dp, end = 8.dp)
+                        .shimmer()
+                        .background(Color.LightGray)
+                        .testTag("descriptionShimmerBox")
+                )
+            }
         }
     }
 }
 
 @Preview
 @Composable
-fun UserLoadingItemPreview() {
-    UserLoadingItem()
+fun RepositoryLoadingItemPreview() {
+    RepositoryLoadingItem()
 }

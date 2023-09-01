@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +30,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SearchField(
     onSearchAction: (String) -> Unit,
+    bouncingDelay: Int? = 500,
     modifier: Modifier = Modifier
 ) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
@@ -43,6 +47,7 @@ fun SearchField(
                 contentDescription = "Search Icon"
             )
         },
+        placeholder = { Text(text = "Search for username...", fontWeight = FontWeight.Light) },
         trailingIcon = {
             if (searchText.text.isNotEmpty()) {
                 Icon(
@@ -54,11 +59,12 @@ fun SearchField(
                 )
             }
         },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = modifier
-            .shadow(4.dp, RoundedCornerShape(16.dp))
-            .background(Color.White, RoundedCornerShape(16.dp))
-            .padding(0.dp),
+            .shadow(4.dp, RoundedCornerShape(12.dp))
+            .background(Color.White, RoundedCornerShape(12.dp))
+            .padding(0.dp)
+            .testTag("inputTextSearchField"),
         singleLine = true
     )
 

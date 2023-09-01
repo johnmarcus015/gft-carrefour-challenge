@@ -1,7 +1,9 @@
 package com.ztx.skeleton.data.api
 
+import com.ztx.skeleton.data.model.RepositoryResponse
 import com.ztx.skeleton.data.model.UserResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 sealed interface GithubService {
@@ -12,4 +14,9 @@ sealed interface GithubService {
     suspend fun getUsersPaginating(
         @Query("since") since: Int
     ): List<UserResponse>
+
+    @GET("users/{username}/repos")
+    suspend fun getRepositories(
+        @Path("username") username: String
+    ): List<RepositoryResponse>
 }

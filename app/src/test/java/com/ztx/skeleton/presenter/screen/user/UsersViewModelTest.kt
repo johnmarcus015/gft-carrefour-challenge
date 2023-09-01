@@ -1,9 +1,11 @@
-package com.ztx.skeleton.presenter
+package com.ztx.skeleton.presenter.screen.user
 
 import com.google.common.truth.Truth.assertThat
 import com.ztx.skeleton.domain.usescase.GetUsersPaginatingUseCase
 import com.ztx.skeleton.domain.usescase.GetUsersUseCase
-import com.ztx.skeleton.presenter.uistate.UiStateHome
+import com.ztx.skeleton.mocks.Mocker
+import com.ztx.skeleton.presenter.screen.users.UsersViewModel
+import com.ztx.skeleton.presenter.uistate.UsersUiState
 import com.ztx.skeleton.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -16,25 +18,25 @@ import org.junit.Test
 import java.net.ConnectException
 
 @ExperimentalCoroutinesApi
-class HomeViewModelTest {
+class UsersViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val getUserUseCase = mockk<GetUsersUseCase>()
     private val getUserPaginatingUseCase = mockk<GetUsersPaginatingUseCase>()
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var viewModel: UsersViewModel
 
     @Before
     fun setUp() {
-        viewModel = HomeViewModel(getUserUseCase, getUserPaginatingUseCase)
+        viewModel = UsersViewModel(getUserUseCase, getUserPaginatingUseCase)
     }
 
     @Test
     fun `Verify if uiState is loading when viewModel is started`() = runTest {
         // Assert
         val uiState = viewModel.uiState.value
-        assertThat(uiState).isInstanceOf(UiStateHome.StateHomeLoading::class.java)
+        assertThat(uiState).isInstanceOf(UsersUiState.Loading::class.java)
     }
 
     @Test
@@ -44,44 +46,54 @@ class HomeViewModelTest {
         // Act
         viewModel.getUsers()
         // Assert
-        assertThat(viewModel.uiState.value).isInstanceOf(UiStateHome.StateHomeError::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(UsersUiState.ConnectionError::class.java)
     }
 
     @Test
     fun `Verify if uiState is success when getUsers is called`() {
         // Arrange
-        val users = MockUsers.createMock("users_response_page_1.json")
+        val users = Mocker.createUsers("users_response_page_1.json")
         coEvery { getUserUseCase.invoke() } returns users
         // Assert
         var uiState = viewModel.uiState.value
-        assertThat(uiState).isInstanceOf(UiStateHome.StateHomeLoading::class.java)
+        assertThat(uiState).isInstanceOf(UsersUiState.Loading::class.java)
         // Act
         viewModel.getUsers()
         // Assert
         uiState = viewModel.uiState.value
-        assertThat(uiState).isInstanceOf(UiStateHome.StateHomeListUsers::class.java)
-        val actualUsers = (uiState as UiStateHome.StateHomeListUsers).users
+        assertThat(uiState).isInstanceOf(UsersUiState.UsersList::class.java)
+        val actualUsers = (uiState as UsersUiState.UsersList).users
         assertEquals(30, actualUsers.size)
     }
 
     @Test
-    fun `Verify if uiState is error when getUsers throw generic exception`() {
+    fun `Verify if uiState is generic error when getUsers throw Exception`() {
         // Arrange
         coEvery { getUserUseCase.invoke() } throws Exception()
         // Act
         viewModel.getUsers()
         // Assert
-        assertThat(viewModel.uiState.value).isInstanceOf(UiStateHome.StateHomeError::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(UsersUiState.GenericError::class.java)
+    }
+
+    @Test
+    fun `Verify if uiState is connection error when getUsers throw ConnectException`() {
+        // Arrange
+        coEvery { getUserUseCase.invoke() } throws ConnectException()
+        // Act
+        viewModel.getUsers()
+        // Assert
+        assertThat(viewModel.uiState.value).isInstanceOf(UsersUiState.ConnectionError::class.java)
     }
 
     @Test
     fun `Verify if getUsers is getting the users correctly`() {
         // Arrange
-        val users = MockUsers.createMock("users_response_page_1.json")
+        val users = Mocker.createUsers("users_response_page_1.json")
         coEvery { getUserUseCase.invoke() } returns users
         // Act
         viewModel.getUsers()
-        val actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        val actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(30, actualUsers.size)
         assertEquals(1, actualUsers[0].id)
@@ -100,20 +112,20 @@ class HomeViewModelTest {
     fun `Verify if pagination is incrementing the users correctly`() {
         // Arrange
         val lastUserId = 46
-        val usersFromPage1 = MockUsers.createMock("users_response_page_1.json")
-        val usersFromPage2 = MockUsers.createMock("users_response_page_2.json")
+        val usersFromPage1 = Mocker.createUsers("users_response_page_1.json")
+        val usersFromPage2 = Mocker.createUsers("users_response_page_2.json")
         coEvery { getUserUseCase.invoke() } returns usersFromPage1
         coEvery { getUserPaginatingUseCase.invoke(lastUserId) } returns usersFromPage2
         // Act
         viewModel.getUsers()
-        var actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        var actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(30, actualUsers.size)
         assertEquals(1, actualUsers[0].id)
         assertEquals(46, actualUsers[29].id)
         // Act
         viewModel.getUsersPaginating(lastUserId)
-        actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(60, actualUsers.size)
         assertEquals(47, actualUsers[30].id)
@@ -124,11 +136,11 @@ class HomeViewModelTest {
     fun `Verify if getUsersPaginating is getting the users correctly`() {
         // Arrange
         val lastUserId = 46
-        val users = MockUsers.createMock("users_response_page_2.json")
+        val users = Mocker.createUsers("users_response_page_2.json")
         coEvery { getUserPaginatingUseCase.invoke(lastUserId) } returns users
         // Act
         viewModel.getUsersPaginating(lastUserId)
-        val actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        val actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(30, actualUsers.size)
         assertEquals(47, actualUsers[0].id)
@@ -150,21 +162,21 @@ class HomeViewModelTest {
         // Arrange
         val lastUserIdFromPagination1 = 46
         val lastUserIdFromPagination2 = 91
-        val usersFromPage1 = MockUsers.createMock("users_response_page_1.json")
-        val usersFromPage2 = MockUsers.createMock("users_response_page_2.json")
-        val usersFromPage3 = MockUsers.createMock("users_response_page_3.json")
+        val usersFromPage1 = Mocker.createUsers("users_response_page_1.json")
+        val usersFromPage2 = Mocker.createUsers("users_response_page_2.json")
+        val usersFromPage3 = Mocker.createUsers("users_response_page_3.json")
         coEvery { getUserUseCase.invoke() } returns usersFromPage1
         coEvery { getUserPaginatingUseCase.invoke(lastUserIdFromPagination1) } returns usersFromPage2
         // Act
         viewModel.getUsers()
-        var actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        var actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(30, actualUsers.size)
         assertEquals(1, actualUsers[0].id)
         assertEquals(46, actualUsers[29].id)
         // Act
         viewModel.getUsersPaginating(lastUserIdFromPagination1)
-        actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(60, actualUsers.size)
         assertEquals(47, actualUsers[30].id)
@@ -173,7 +185,7 @@ class HomeViewModelTest {
         coEvery { getUserPaginatingUseCase.invoke(lastUserIdFromPagination2) } returns usersFromPage3
         // Act
         viewModel.getUsersPaginating(lastUserIdFromPagination2)
-        actualUsers = (viewModel.uiState.value as UiStateHome.StateHomeListUsers).users
+        actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
         // Assert
         assertEquals(90, actualUsers.size)
         assertEquals(91, actualUsers[59].id)
@@ -188,7 +200,7 @@ class HomeViewModelTest {
         // Act
         viewModel.getUsersPaginating(lastUserId)
         // Assert
-        assertThat(viewModel.uiState.value).isInstanceOf(UiStateHome.StateHomeError::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(UsersUiState.ConnectionError::class.java)
     }
 
     @Test

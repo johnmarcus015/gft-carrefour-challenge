@@ -55,7 +55,7 @@ object RestApiModules {
     @Singleton
     fun provideAuthenticator() = Authenticator { _, response ->
         response.request.newBuilder()
-            .header("Authorization", "token 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")
+            .header("Authorization", "token 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")
             .build()
     }
 }
