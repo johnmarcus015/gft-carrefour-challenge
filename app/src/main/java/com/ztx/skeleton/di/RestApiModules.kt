@@ -1,6 +1,8 @@
 package com.ztx.skeleton.di
 
+import com.ztx.skeleton.BuildConfig
 import com.ztx.skeleton.data.api.GithubService
+import com.ztx.skeleton.domain.model.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +21,7 @@ object RestApiModules {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
@@ -41,21 +43,31 @@ object RestApiModules {
 
     @Provides
     @Singleton
+    fun provideTokenManager(): TokenManager {
+        return TokenManager()
+    }
+
+    @Provides
+    @Singleton
     fun provideHttpClient(
         authenticator: Authenticator,
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        tokenInterceptor: TokenInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .authenticator(authenticator)
+            .addInterceptor(tokenInterceptor)
             .addInterceptor(loggingInterceptor)
+            .authenticator(authenticator)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideAuthenticator() = Authenticator { _, response ->
+    fun provideAuthenticator(
+        tokenManager: TokenManager
+    ) = Authenticator { _, response ->
         response.request.newBuilder()
-            .header("Authorization", "token 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")
+            .header("Authorization", "Bearer ${tokenManager.getToken()}")
             .build()
     }
 }

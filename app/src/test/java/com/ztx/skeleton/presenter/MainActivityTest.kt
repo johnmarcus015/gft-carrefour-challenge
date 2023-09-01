@@ -56,11 +56,6 @@ class MainActivityTest {
     }
 
     @Test
-    fun splashscreenComposableIsDisplayed() {
-        composeTestRule.onNodeWithTag("mockSplashscreen").assertExists()
-    }
-
-    @Test
     fun usersScreenComposableIsDisplayed() {
         // Navigate to UsersScreen route
         composeTestRule.runOnUiThread {

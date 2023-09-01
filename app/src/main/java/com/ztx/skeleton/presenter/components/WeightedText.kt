@@ -10,7 +10,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import org.w3c.dom.Text
+import com.ztx.skeleton.presenter.ui.theme.Dark_1f2329
 
 @Composable
 fun WeightedText(
@@ -30,7 +30,7 @@ fun WeightedText(
             }
         }
     }
-    Text(text = styledText, modifier = modifier)
+    Text(text = styledText, color = Dark_1f2329, modifier = modifier)
 }
 
 @Preview

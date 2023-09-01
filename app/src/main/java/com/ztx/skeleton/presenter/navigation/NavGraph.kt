@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.ztx.skeleton.presenter.screen.SplashScreen
 import com.ztx.skeleton.presenter.screen.repositories.RepositoriesScreen
 import com.ztx.skeleton.presenter.screen.repositories.RepositoriesViewModel
 import com.ztx.skeleton.presenter.screen.users.UsersScreen
@@ -23,15 +22,8 @@ import com.ztx.skeleton.presenter.screen.users.UsersViewModel
 fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Routes.splashscreenRoute
+        startDestination = Routes.usersRoute
     ) {
-
-        composable(Routes.splashscreenRoute) {
-            SplashScreen(
-                navController = navController,
-                modifier = Modifier.testTag("splashScreen")
-            )
-        }
 
         composable(Routes.usersRoute) {
             val viewModel = hiltViewModel<UsersViewModel>()
@@ -86,6 +78,5 @@ fun NavGraph(navController: NavHostController) {
 
 object Routes {
     const val usersRoute = "users"
-    const val splashscreenRoute = "splashscreen"
     const val repositoriesRoute = "repositories/{username}"
 }

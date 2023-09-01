@@ -18,8 +18,6 @@ import com.ztx.skeleton.presenter.components.Header
 import com.ztx.skeleton.presenter.components.error.ErrorFactory
 import com.ztx.skeleton.presenter.components.repository.RepositoryItem
 import com.ztx.skeleton.presenter.components.repository.RepositoryLoadingItem
-import com.ztx.skeleton.presenter.model.RepositoryUiData
-import com.ztx.skeleton.presenter.model.UserUiData
 import com.ztx.skeleton.presenter.uistate.RepositoriesUiState
 import com.ztx.skeleton.presenter.uistate.RepositoriesUiState.ConnectionError
 import com.ztx.skeleton.presenter.uistate.RepositoriesUiState.GenericError
@@ -27,7 +25,6 @@ import com.ztx.skeleton.presenter.uistate.RepositoriesUiState.Loading
 import com.ztx.skeleton.presenter.uistate.RepositoriesUiState.RepositoriesList
 import sampleRepositories
 import java.net.ConnectException
-import kotlin.random.Random
 
 @Composable
 fun RepositoriesScreen(

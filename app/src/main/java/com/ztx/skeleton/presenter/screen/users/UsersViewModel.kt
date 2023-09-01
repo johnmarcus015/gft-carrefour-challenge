@@ -1,6 +1,5 @@
 package com.ztx.skeleton.presenter.screen.users
 
-import android.content.res.Resources.NotFoundException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ztx.skeleton.domain.usescase.GetUserUseCase
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.net.ConnectException
 import java.net.UnknownHostException
 import javax.inject.Inject
 

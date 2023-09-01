@@ -1,6 +1,5 @@
 package com.ztx.skeleton.presenter.components.user
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.ztx.skeleton.R
 import com.ztx.skeleton.presenter.model.UserUiData
+import com.ztx.skeleton.presenter.ui.theme.Dark_1f2329
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +68,8 @@ fun UserItem(
                         .fillMaxWidth()
                         .padding(top = 14.dp, bottom = 15.dp, start = 16.dp),
                     text = "${user.id}. ${user.login}",
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = Dark_1f2329
                 )
             }
         }

@@ -14,11 +14,8 @@ import com.ztx.skeleton.presenter.navigation.Routes
 fun MockNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Routes.splashscreenRoute
+        startDestination = Routes.usersRoute
     ) {
-        composable(Routes.splashscreenRoute) {
-            Box(modifier = Modifier.testTag("mockSplashscreen")) { /* Mock SplashScreen */ }
-        }
         composable(Routes.usersRoute) {
             Box(modifier = Modifier.testTag("mockUsersScreen")) { /* Mock UsersScreen */ }
         }

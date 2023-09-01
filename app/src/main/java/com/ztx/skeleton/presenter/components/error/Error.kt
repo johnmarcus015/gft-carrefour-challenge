@@ -49,7 +49,8 @@ fun Error(
         )
         Text(
             text = "$title \n$subtitle",
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Dark_1f2329
         )
         Spacer(modifier = Modifier.height(30.dp))
         Button(

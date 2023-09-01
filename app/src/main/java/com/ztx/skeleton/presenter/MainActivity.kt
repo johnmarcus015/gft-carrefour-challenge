@@ -1,5 +1,7 @@
 package com.ztx.skeleton.presenter
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,6 +29,12 @@ class MainActivity : ComponentActivity() {
                     NavGraph(navController = rememberNavController())
                 }
             }
+        }
+    }
+
+    companion object {
+        fun start(context: Context) {
+            context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
 }

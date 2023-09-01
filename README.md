@@ -3,16 +3,15 @@
 ### Github app 
 #### Regras Gerais
 
-● O candidato tem até 3 dias para entregar a implementação do desafio.
-● Nenhuma alteração no projeto será permitida após a entrega, caso contrário o
+- O candidato tem até 3 dias para entregar a implementação do desafio.
+- Nenhuma alteração no projeto será permitida após a entrega, caso contrário o
 candidato será desclassificado.
-● O projeto deve ser desenvolvido em Android navito
-(Kotlin).
-● O projeto deve ser disponibilizado em um repositório git (Github, Bitbucket ou
+- O projeto deve ser desenvolvido em Android nativo (Kotlin).
+- O projeto deve ser disponibilizado em um repositório git (Github, Bitbucket ou
 Gitlab) público.
-● O projeto deve conter as instruções necessárias para realizar a execução do
+- O projeto deve conter as instruções necessárias para realizar a execução do
 mesmo.
-● O candidato pode utilizar bibliotecas open-source de terceiros.
+- O candidato pode utilizar bibliotecas open-source de terceiros.
 
 #### O Desafio
 
@@ -27,37 +26,50 @@ repositórios.
 A aplicação deverá consumir um serviço para realizar tais operações. Segue a URL
 da API:
 
-- [https://api.github.com](https://api.github.com)
+[https://api.github.com](https://api.github.com)
 
-● Para listar os usuários, a aplicação deverá consumir o seguinte endereço:
+- Para listar os usuários, a aplicação deverá consumir o seguinte endereço:
 
-- [https://api.github.com/users](https://api.github.com/users)
+[https://api.github.com/users](https://api.github.com/users)
 
 Este endereço lista apenas alguns usuários. Isto pode servir como uma massa de dados para
 a tela de listagem dos usuários da aplicação.
 
-● Para obter informações específicas de um usuário, basta acessar o seguinte
+- Para obter informações específicas de um usuário, basta acessar o seguinte
 endereço:
 
-- [https://api.github.com/users/torvalds](https://api.github.com/users/torvalds)
+[https://api.github.com/users/torvalds](https://api.github.com/users/torvalds)
 
-● Para listar os repositórios de um usuário específico, a aplicação deverá acessar o
+- Para listar os repositórios de um usuário específico, a aplicação deverá acessar o
 seguinte endereço:
 
-- [https://api.github.com/users/torvalds/repos](https://api.github.com/users/torvalds/repos)
+[https://api.github.com/users/torvalds/repos](https://api.github.com/users/torvalds/repos)
 
-● Para obter mais informações sobre a API:
+- Para obter mais informações sobre a API:
 
-- [https://developer.github.com/v3/](https://developer.github.com/v3/)
+[https://developer.github.com/v3/](https://developer.github.com/v3/)
 
 #### Dicas
 
-• É sempre bom avisar ao usuário quando uma operação está em andamento.
-• A API pode retornar erros, por isso pense em como apresentar isso ao usuário.
-• Faça testes automatizados.
-• Explore a API antes de começar qualquer coisa.
-• Tire um tempo para entender tudo e faça um planejamento. Um bom projeto é fruto de
+- É sempre bom avisar ao usuário quando uma operação está em andamento.
+- A API pode retornar erros, por isso pense em como apresentar isso ao usuário.
+- Faça testes automatizados.
+- Explore a API antes de começar qualquer coisa.
+- Tire um tempo para entender tudo e faça um planejamento. Um bom projeto é fruto de
 um bom planejamento
+
+### Preview
+![docs/preview.png](docs/preview.png)
+
+### Features
+The app contains the following features: 
+1. Authentication
+2. User List + Pagination + SwipeRefresh
+3. User Search
+4. Repositories List
+5. User not found screen
+6. Connection error screen
+7. Generic error screen
 
 ### Good Practices
 To develop this app some good practices were used, such as:
@@ -69,13 +81,18 @@ To develop this app some good practices were used, such as:
 
 #### TechStack
 - Jetpack Compose (Layout)
-    - [Jetpack Compose: Official Documentation](https://developer.android.com/jetpack/compose?gclid=CjwKCAjwivemBhBhEiwAJxNWN6w06hL4i1TxZNyN0Zf8vQ_XBjIJ3tMequ55xLTz9NJSas7sXWrcnxoCFkwQAvD_BwE&gclsrc=aw.ds&hl=pt-br)
+  - [Jetpack Compose: Official Documentation](https://developer.android.com/jetpack/compose?gclid=CjwKCAjwivemBhBhEiwAJxNWN6w06hL4i1TxZNyN0Zf8vQ_XBjIJ3tMequ55xLTz9NJSas7sXWrcnxoCFkwQAvD_BwE&gclsrc=aw.ds&hl=pt-br)
 - Flow + StateFlow
-    - [Flow + StateFlow: Official Documentation](https://developer.android.com/kotlin/flow?hl=pt-br)
+  - [Flow + StateFlow: Official Documentation](https://developer.android.com/kotlin/flow?hl=pt-br)
 - Coroutines (Multithreading)
-    - [Coroutines: Official Documentation](https://developer.android.com/kotlin/coroutines?hl=pt-br)
-- Junit + Robolectric + Mockk (Unit Tests)
+  - [Coroutines: Official Documentation](https://developer.android.com/kotlin/coroutines?hl=pt-br)
+- Junit + Robolectric + Mockk + MockWebServer (Unit Tests)
+  - [Robolectric: Official documentation](https://robolectric.org/)
+  - [Mockk: Official documentation](https://github.com/mockk/mockk)
+  - [Junit: Official documentation](https://junit.org/junit5/docs/current/user-guide/)
+  - [MockWebServer: Official documentation](https://github.com/square/okhttp/tree/master/mockwebserver)
 - Hilt (Dependency injection)
+  - [Hilt: Official documentation](https://dagger.dev/hilt/)
 
 ### Code Quality
 The code quality was measured using sonarqube and the report can be checked below:
@@ -129,6 +146,6 @@ The architecture chose for the project was **MVVM + Clean Architecture**
 5. **Improved Collaboration:** Developers working on different layers can work simultaneously with minimal dependencies, improving team productivity.
 
 ### Interesting links
-- [https://docs.github.com/pt/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28](pagination)
-- [https://docs.github.com/pt/free-pro-team@latest/rest/repos/repos?apiVersion=2022-11-28#list-organization-repositories](repositories scheme)
-- [https://docs.github.com/pt/rest/overview/authenticating-to-the-rest-api?apiVersion=2022-11-28](authentication in github rest api)
+- [GithubApi - Pagination](https://docs.github.com/pt/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28)
+- [GithubApi - Repositories Scheme](https://docs.github.com/pt/free-pro-team@latest/rest/repos/repos?apiVersion=2022-11-28#list-organization-repositories)
+- [GithubApi - Authentication](https://docs.github.com/pt/rest/overview/authenticating-to-the-rest-api?apiVersion=2022-11-28)
