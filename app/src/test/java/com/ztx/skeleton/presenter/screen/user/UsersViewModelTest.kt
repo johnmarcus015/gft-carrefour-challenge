@@ -1,6 +1,7 @@
 package com.ztx.skeleton.presenter.screen.user
 
 import com.google.common.truth.Truth.assertThat
+import com.ztx.skeleton.domain.usescase.GetUserUseCase
 import com.ztx.skeleton.domain.usescase.GetUsersPaginatingUseCase
 import com.ztx.skeleton.domain.usescase.GetUsersUseCase
 import com.ztx.skeleton.mocks.Mocker
@@ -16,6 +17,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.net.ConnectException
+import java.net.UnknownHostException
 
 @ExperimentalCoroutinesApi
 class UsersViewModelTest {
@@ -23,13 +25,15 @@ class UsersViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val getUserUseCase = mockk<GetUsersUseCase>()
+    private val getUserUseCase = mockk<GetUserUseCase>()
+    private val getUsersUseCase = mockk<GetUsersUseCase>()
     private val getUserPaginatingUseCase = mockk<GetUsersPaginatingUseCase>()
+
     private lateinit var viewModel: UsersViewModel
 
     @Before
     fun setUp() {
-        viewModel = UsersViewModel(getUserUseCase, getUserPaginatingUseCase)
+        viewModel = UsersViewModel(getUsersUseCase, getUserPaginatingUseCase, getUserUseCase)
     }
 
     @Test
@@ -42,7 +46,7 @@ class UsersViewModelTest {
     @Test
     fun `Verify if uiState is error when getUsers throw connect exception`() {
         // Arrange
-        coEvery { getUserUseCase.invoke() } throws ConnectException()
+        coEvery { getUsersUseCase.invoke() } throws UnknownHostException()
         // Act
         viewModel.getUsers()
         // Assert
@@ -53,7 +57,7 @@ class UsersViewModelTest {
     fun `Verify if uiState is success when getUsers is called`() {
         // Arrange
         val users = Mocker.createUsers("users_response_page_1.json")
-        coEvery { getUserUseCase.invoke() } returns users
+        coEvery { getUsersUseCase.invoke() } returns users
         // Assert
         var uiState = viewModel.uiState.value
         assertThat(uiState).isInstanceOf(UsersUiState.Loading::class.java)
@@ -69,7 +73,7 @@ class UsersViewModelTest {
     @Test
     fun `Verify if uiState is generic error when getUsers throw Exception`() {
         // Arrange
-        coEvery { getUserUseCase.invoke() } throws Exception()
+        coEvery { getUsersUseCase.invoke() } throws Exception()
         // Act
         viewModel.getUsers()
         // Assert
@@ -79,7 +83,7 @@ class UsersViewModelTest {
     @Test
     fun `Verify if uiState is connection error when getUsers throw ConnectException`() {
         // Arrange
-        coEvery { getUserUseCase.invoke() } throws ConnectException()
+        coEvery { getUsersUseCase.invoke() } throws UnknownHostException()
         // Act
         viewModel.getUsers()
         // Assert
@@ -90,7 +94,7 @@ class UsersViewModelTest {
     fun `Verify if getUsers is getting the users correctly`() {
         // Arrange
         val users = Mocker.createUsers("users_response_page_1.json")
-        coEvery { getUserUseCase.invoke() } returns users
+        coEvery { getUsersUseCase.invoke() } returns users
         // Act
         viewModel.getUsers()
         val actualUsers = (viewModel.uiState.value as UsersUiState.UsersList).users
@@ -114,7 +118,7 @@ class UsersViewModelTest {
         val lastUserId = 46
         val usersFromPage1 = Mocker.createUsers("users_response_page_1.json")
         val usersFromPage2 = Mocker.createUsers("users_response_page_2.json")
-        coEvery { getUserUseCase.invoke() } returns usersFromPage1
+        coEvery { getUsersUseCase.invoke() } returns usersFromPage1
         coEvery { getUserPaginatingUseCase.invoke(lastUserId) } returns usersFromPage2
         // Act
         viewModel.getUsers()
@@ -165,7 +169,7 @@ class UsersViewModelTest {
         val usersFromPage1 = Mocker.createUsers("users_response_page_1.json")
         val usersFromPage2 = Mocker.createUsers("users_response_page_2.json")
         val usersFromPage3 = Mocker.createUsers("users_response_page_3.json")
-        coEvery { getUserUseCase.invoke() } returns usersFromPage1
+        coEvery { getUsersUseCase.invoke() } returns usersFromPage1
         coEvery { getUserPaginatingUseCase.invoke(lastUserIdFromPagination1) } returns usersFromPage2
         // Act
         viewModel.getUsers()
@@ -196,11 +200,26 @@ class UsersViewModelTest {
     fun `Verify if uiState is error when getUsersPaginating throw connect exception`() {
         // Arrange
         val lastUserId = 46
-        coEvery { getUserPaginatingUseCase.invoke(lastUserId) } throws ConnectException()
+        coEvery { getUserPaginatingUseCase.invoke(lastUserId) } throws UnknownHostException()
         // Act
         viewModel.getUsersPaginating(lastUserId)
         // Assert
         assertThat(viewModel.uiState.value).isInstanceOf(UsersUiState.ConnectionError::class.java)
+    }
+
+    @Test
+    fun `Verify if getUser is getting a user correctly`() {
+        // Arrange
+        val username = "username"
+        val user = Mocker.createUsers("users_response_page_1.json")[0]
+        coEvery { getUserUseCase.invoke(username) } returns user
+        // Act
+        viewModel.getUser(username)
+        val currentUser = (viewModel.uiState.value as UsersUiState.User).user
+        // Assert
+        assertEquals(1, currentUser.id)
+        assertEquals("mojombo", currentUser.login)
+        assertEquals("https://avatars.githubusercontent.com/u/1?v=4", currentUser.avatarUrl)
     }
 
     @Test

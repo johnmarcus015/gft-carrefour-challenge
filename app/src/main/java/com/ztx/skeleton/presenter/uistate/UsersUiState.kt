@@ -7,6 +7,7 @@ sealed class UsersUiState {
 
     class UserNotfound : UsersUiState()
 
+    class User(val user: UserUiData) : UsersUiState()
     class UsersList(val users: List<UserUiData>) : UsersUiState()
 
     class ConnectionError(val error: Exception) : UsersUiState()

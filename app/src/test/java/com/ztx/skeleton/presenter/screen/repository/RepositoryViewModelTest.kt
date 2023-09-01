@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.net.ConnectException
+import java.net.UnknownHostException
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -76,7 +77,7 @@ class RepositoriesViewModelTest {
     fun `Verify if uiState is connection error when getRepositories throw ConnectException`() {
         // Arrange
         val username = "username"
-        coEvery { getRepositoriesUseCase.invoke(username) } throws ConnectException()
+        coEvery { getRepositoriesUseCase.invoke(username) } throws UnknownHostException()
         // Act
         viewModel.getRepositories(username)
         // Assert

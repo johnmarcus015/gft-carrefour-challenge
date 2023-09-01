@@ -2,14 +2,19 @@ package com.ztx.skeleton.presenter.screen.users
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -22,7 +27,6 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.ztx.skeleton.presenter.components.Header
 import com.ztx.skeleton.presenter.components.SearchField
 import com.ztx.skeleton.presenter.components.error.ErrorFactory
-import com.ztx.skeleton.presenter.components.error.ErrorUserNotFound
 import com.ztx.skeleton.presenter.components.user.UserItem
 import com.ztx.skeleton.presenter.components.user.UserLoadingItem
 import com.ztx.skeleton.presenter.uistate.UsersUiState
@@ -31,6 +35,7 @@ import com.ztx.skeleton.presenter.uistate.UsersUiState.GenericError
 import com.ztx.skeleton.presenter.uistate.UsersUiState.Loading
 import com.ztx.skeleton.presenter.uistate.UsersUiState.UserNotfound
 import com.ztx.skeleton.presenter.uistate.UsersUiState.UsersList
+import kotlinx.coroutines.delay
 import sampleUsers
 import java.net.ConnectException
 
@@ -41,6 +46,8 @@ fun UsersScreen(
     swipeRefreshState: SwipeRefreshState,
     onPullRefresh: () -> Unit? = {},
     onPagination: (lastUserId: Int) -> Unit? = {},
+    onSearchAction: (username: String) -> Unit? = {},
+    onReloadScreen: () -> Unit? = {},
     modifier: Modifier = Modifier
 ) {
 
@@ -49,7 +56,7 @@ fun UsersScreen(
         state = swipeRefreshState,
         onRefresh = {
             onPullRefresh.invoke()
-            Toast.makeText(context, "Usuários atualizados!", Toast.LENGTH_LONG)
+            Toast.makeText(context, "Users updated!", Toast.LENGTH_LONG)
                 .show()
         },
         modifier = Modifier.testTag("swipeRefreshUsersScreen")
@@ -82,19 +89,7 @@ fun UsersScreen(
                         Column(
                             modifier = modifier
                         ) {
-                            SearchField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 8.dp,
-                                        top = 16.dp
-                                    ),
-                                onSearchAction = { query ->
-                                    Toast.makeText(context, query, Toast.LENGTH_LONG).show()
-                                })
-
+                            Search(onSearchAction)
                             LazyColumn(
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 contentPadding = PaddingValues(
@@ -115,31 +110,86 @@ fun UsersScreen(
                                         })
                                     if (index >= users.size - 1) {
                                         onPagination(users.last().id)
+                                        // Delay with intention of show the feedback of pagination to the user
+                                        LaunchedEffect(Unit) { delay(2000) }
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            CircularProgressIndicator()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
 
+                    is UsersUiState.User -> {
+                        Search(onSearchAction)
+                        Row(
+                            modifier = Modifier.padding(
+                                top = 8.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 16.dp
+                            )
+                        ) {
+                            UserItem(
+                                user = uiState.user, onClick = {
+                                    navController.navigate(
+                                        "repositories/${uiState.user.login}"
+                                    )
+                                }
+                            )
+                        }
+                    }
+
                     is UserNotfound -> {
-                        ErrorUserNotFound()
+                        Search(onSearchAction)
+                        ErrorFactory.CreateUserNotFoundError(
+                            onClickButton = { onReloadScreen() }
+                        )
                     }
 
                     is ConnectionError -> {
                         uiState.error.message?.let {
-                            ErrorFactory.CreateConnectionError(message = it)
+                            ErrorFactory.CreateConnectionError(
+                                onClickButton = { onReloadScreen() }
+                            )
                         }
                     }
 
                     is GenericError -> {
                         uiState.error.message?.let {
-                            ErrorFactory.CreateGenericError(message = it)
+                            ErrorFactory.CreateGenericError(
+                                message = it,
+                                onClickButton = { onReloadScreen() }
+                            )
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun Search(
+    onSearchAction: (username: String) -> Unit?,
+) {
+    SearchField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 8.dp,
+                top = 16.dp
+            ),
+        onSearchAction = { query -> onSearchAction(query) }
+    )
 }
 
 @Preview(showBackground = true)

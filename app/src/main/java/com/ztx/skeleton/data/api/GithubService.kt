@@ -19,4 +19,9 @@ sealed interface GithubService {
     suspend fun getRepositories(
         @Path("username") username: String
     ): List<RepositoryResponse>
+
+    @GET("users/{username}")
+    suspend fun getUser(
+        @Path("username") username: String
+    ): UserResponse
 }

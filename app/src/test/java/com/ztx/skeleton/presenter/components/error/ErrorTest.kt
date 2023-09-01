@@ -22,7 +22,7 @@ class ErrorTest {
     @Test
     fun `Verify if Error is showing image of connection error correctly`() {
         composeTestRule.setContent {
-            ErrorFactory.CreateConnectionError(message = "Connection Error")
+            ErrorFactory.CreateConnectionError(onClickButton = {})
         }
         composeTestRule.onNodeWithTag(R.drawable.ic_connection_error.toString()).assertIsDisplayed()
     }
@@ -30,15 +30,15 @@ class ErrorTest {
     @Test
     fun `Verify is Error is showing message of connection error correctly`() {
         composeTestRule.setContent {
-            ErrorFactory.CreateConnectionError(message = "Connection Error")
+            ErrorFactory.CreateConnectionError(onClickButton = {})
         }
-        composeTestRule.onNodeWithText("Sorry, an unexpected error occurred! \nConnection Error")
+        composeTestRule.onNodeWithText("An unexpected error occurred! \nWithout connection with internet")
     }
 
     @Test
     fun `Verify if Error is showing image of generic error correctly`() {
         composeTestRule.setContent {
-            ErrorFactory.CreateGenericError(message = "Generic Error")
+            ErrorFactory.CreateGenericError(message = "Generic Error", onClickButton = {})
         }
         composeTestRule.onNodeWithTag(R.drawable.ic_warning.toString()).assertIsDisplayed()
     }
@@ -46,8 +46,24 @@ class ErrorTest {
     @Test
     fun `Verify is Error is showing message of generic error correctly`() {
         composeTestRule.setContent {
-            ErrorFactory.CreateGenericError(message = "Generic Error")
+            ErrorFactory.CreateGenericError(message = "Generic Error", onClickButton = {})
         }
-        composeTestRule.onNodeWithText("Sorry, an unexpected error occurred! \nGeneric Error")
+        composeTestRule.onNodeWithText("An unexpected error occurred! \nGeneric Error")
+    }
+
+    @Test
+    fun `Verify if Error is showing image of user not found error correctly`() {
+        composeTestRule.setContent {
+            ErrorFactory.CreateUserNotFoundError(onClickButton = {})
+        }
+        composeTestRule.onNodeWithTag(R.drawable.ic_user_not_found.toString()).assertIsDisplayed()
+    }
+
+    @Test
+    fun `Verify is Error is showing message of user not found error correctly`() {
+        composeTestRule.setContent {
+            ErrorFactory.CreateUserNotFoundError(onClickButton = {})
+        }
+        composeTestRule.onNodeWithText("User not found \nVerify if you typed the username correctly")
     }
 }

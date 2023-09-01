@@ -28,7 +28,7 @@ class SearchFieldTest {
         composeTestRule.setContent {
             SearchField(onSearchAction = {})
         }
-        composeTestRule.onNodeWithText("Search for username...").assertExists()
+        composeTestRule.onNodeWithText("Search username...").assertExists()
     }
 
     @Test
@@ -88,6 +88,8 @@ class SearchFieldTest {
         // Enter text with three characters: onSearchAction should be triggered after delay
         composeTestRule.onNodeWithTag("inputTextSearchField")
             .performTextInput("test")
+        // Click on button search
+        composeTestRule.onNodeWithTag("buttonSearchField").performClick()
 
         composeTestRule.waitForIdle()
         composeTestRule.mainClock.advanceTimeBy(1500)

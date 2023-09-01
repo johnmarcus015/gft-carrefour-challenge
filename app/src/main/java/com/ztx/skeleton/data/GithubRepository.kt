@@ -21,4 +21,8 @@ class GithubRepository @Inject constructor(
     suspend fun getRepositories(username: String): List<Repository> {
         return service.getRepositories(username).map { it.toRepository() }
     }
+
+    suspend fun getUser(username: String): User {
+        return service.getUser(username).toUser()
+    }
 }

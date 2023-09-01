@@ -40,7 +40,9 @@ fun SplashScreen(
 
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate(Routes.usersRoute)
+        navController.navigate(Routes.usersRoute) {
+            popUpTo(Routes.splashscreenRoute) { inclusive = true }
+        }
     }
 
     Box(

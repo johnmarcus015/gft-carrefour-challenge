@@ -34,6 +34,7 @@ fun RepositoriesScreen(
     uiState: RepositoriesUiState,
     swipeRefreshState: SwipeRefreshState,
     onPullRefresh: () -> Unit? = {},
+    onReloadScreen: () -> Unit? = {},
     modifier: Modifier = Modifier
 ) {
 
@@ -42,7 +43,7 @@ fun RepositoriesScreen(
         state = swipeRefreshState,
         onRefresh = {
             onPullRefresh.invoke()
-            Toast.makeText(context, "Repositórios atualizados!", Toast.LENGTH_LONG)
+            Toast.makeText(context, "Repositories updated!", Toast.LENGTH_LONG)
                 .show()
         },
         modifier = Modifier.testTag("swipeRefreshRepositoriesScreen")
@@ -89,13 +90,18 @@ fun RepositoriesScreen(
 
                 is ConnectionError -> {
                     uiState.error.message?.let {
-                        ErrorFactory.CreateConnectionError(message = it)
+                        ErrorFactory.CreateConnectionError(
+                            onClickButton = { onReloadScreen() }
+                        )
                     }
                 }
 
                 is GenericError -> {
                     uiState.error.message?.let {
-                        ErrorFactory.CreateGenericError(message = it)
+                        ErrorFactory.CreateGenericError(
+                            message = it,
+                            onClickButton = { onReloadScreen() }
+                        )
                     }
                 }
             }

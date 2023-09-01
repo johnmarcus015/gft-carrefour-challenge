@@ -24,6 +24,8 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = Dark_1f2329,
     onBackground = Dark_1f2329,
     onSurface = Dark_1f2329,
+    outline = Dark_1f2329,
+    outlineVariant = Dark_1f2329,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +35,7 @@ class RepositoriesViewModel @Inject constructor(
                 val repositories =
                     getRepositoriesUseCase.invoke(username).map { it.toRepositoryUiData() }
                 _uiState.value = RepositoriesList(repositories)
-            } catch (error: ConnectException) {
+            } catch (error: UnknownHostException) {
                 _uiState.value = ConnectionError(error)
             } catch (error: Exception) {
                 _uiState.value = GenericError(error)

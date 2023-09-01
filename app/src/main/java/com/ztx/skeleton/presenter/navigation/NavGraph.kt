@@ -45,6 +45,8 @@ fun NavGraph(navController: NavHostController) {
                 swipeRefreshState = swipeRefreshState,
                 onPullRefresh = { viewModel.getUsers() },
                 onPagination = { lastUserId -> viewModel.getUsersPaginating(lastUserId) },
+                onSearchAction = { username -> viewModel.getUser(username) },
+                onReloadScreen = { viewModel.getUsers() },
                 modifier = Modifier.testTag("userScreen")
             )
 
@@ -65,6 +67,11 @@ fun NavGraph(navController: NavHostController) {
             RepositoriesScreen(
                 uiState = uiState,
                 swipeRefreshState = swipeRefreshState,
+                onReloadScreen = {
+                    backStackEntry.arguments?.getString("username")?.let {
+                        viewModel.getRepositories(it)
+                    }
+                },
                 modifier = Modifier.testTag("repositoriesScreen")
             )
 
